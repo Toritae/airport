@@ -7,4 +7,6 @@ urlpatterns = [
     path('question1/', views.Question1.index_question1),
     path('question1/search', views.Question1.search_question1),
     path('question2/', views.Question2.index),
+    path('question2/<int:pk>', views.Question2.detail),
+    path('setup/', views.Setup.setup),
 ]

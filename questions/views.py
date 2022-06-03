@@ -1,9 +1,13 @@
 import json
-from django.views.generic import ListView
-from django.shortcuts import render
+
+from django.core.paginator import Paginator, EmptyPage
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse,Http404
-from .models import ticket
+from .models import ticket, Airport
 from .forms import SearchForm
+from django.core.checks import messages
+from django.core.serializers import serialize
+import requests
 # Create your views here.
 
 class home():
@@ -39,13 +43,46 @@ class Question1():
         except:
             raise Http404("iata not found")
 
-class Question2(ListView):
+class Question2():
     def index(request):
-        context = {}
         form = SearchForm
-        context['form'] = form
-        return render(request, 'questions/question2/index.html', context)
+        airports = Airport.objects.order_by('-id')
 
-    def detail_question2(request):
-        # result =
-        return render(request, 'questions/question2/detail.html', json)
+        if request.GET.get('search_tag'):
+            search_airports = []
+            search_keyword = request.GET['data']
+            search_tag = request.GET['search_tag']
+
+            if search_tag == 'iata':
+                search_airports = airports.filter(iata=search_keyword)
+            elif search_tag == 'name':
+                search_airports = airports.filter(name=search_keyword)
+            elif search_tag == 'city':
+                search_airports = airports.filter(city=search_keyword)
+
+
+            # paginator = Paginator(search_airports, 15)
+            context = {'data_list': search_airports, 'form': form, 'search_tag': search_tag}
+            return render(request, "questions/question2/index.html", context)
+
+        context = {'data_list': airports, 'form':form }
+
+        return render(request, "questions/question2/index.html", context)
+
+    def detail(request, pk):
+        airport = Airport.objects.filter(pk=pk).values()
+
+        return JsonResponse(*airport)
+
+# 리스트뷰를 위한 로컬db 생성
+# 1회만 실행 목적 /
+class Setup():
+    def setup(self):
+        data = ticket.get_ticket_json()
+        for key, value in data.items():
+            airport = Airport.objects.create(icao=value['icao'], iata=value['iata'], name=value['name'], city=value['city'],
+                                             state=value['state'], country=value['country'], elevation=value['elevation'],
+                                             lat=value['lat'], lon=value['lon'], tz=value['tz'])
+        return redirect('questions:home')
+
+

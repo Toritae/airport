@@ -9,5 +9,65 @@
         {{ form }}
         <input type="submit"/>
     </form>
+    {% block content %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-sm-9">
+                <div id="contentsArea">
+                    <div class="n_tit_page">
+                        <h2>검색 결과</h2>
+                    </div>
+                </div>
+            <div>
+            <table class="table table-sm table-hover">
+                <thead style="border-top: 1px solid #dee2e6;">
+                    <tr class="text-center">
+                        <th style="font-weight: bold; font-size: 16px;" class="fs">공항 코드</th>
+                        <th style="font-weight: bold; font-size: 16px;" class="fs">이름</th>
+                        <th style="font-weight: bold; font-size: 16px;" class="fs">도시</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data_list %}
+                        {% for data in data_list %}
+                            <tr class="text-center" style="cursor:pointer;" onclick="location.href='/question2/{{ data.pk }}'">
+                                    <td style="font-weight: 500;">{{ data.iata }}</td>
+                                    <td class="text-left" style="width:50%; font-weight: 600;"><a id="question2/{{ data.pk }}">{{ data.name|truncatechars:30 }}</a></td>
+                                    <td style="font-weight: 500;">{{ data.city }}</td>
+                                </tr>
+                                {% endfor %}
+                    {% else %}
+                        {% if search_tag %}
+                            <tr class="text-center">
+                                <td style="font-weight: bold; color:gray;" colspan="5">
+                                    <i class="fas fa-info-circle"></i>&nbsp;일치하는 검색 결과가 없습니다.
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr class="text-center">
+                                <td style="font-weight: bold; color:gray;" colspan="5">
+                                    <i class="fas fa-info-circle"></i>&nbsp;작성된 게시글이 없습니다.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endif %}
+                </tbody>
+            </table>
+            </div>
+            </div>
+        </div>
+        </div>
+
+
+        <script type="text/javascript">
+            target = window.location.search.split('&')[0].split('=')[1]
+            var type = document.getElementsByTagName('option')
+            for (var i = 0; i < 5; i++) {
+                if (type[i].value === target) {
+                    type[i].setAttribute('selected', 'selected')
+                }
+            }
+        </script>
+        {% endblock %}
 </body>
 </html>

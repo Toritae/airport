@@ -2,8 +2,9 @@
     <head>
         <title>Questions</title>
     </head>
+    {% load static %}
     <body>
-        <a href="question1/" alt="Question1"><img src="Q1.jpg"></a>
-        <a href="question2/" alt="Question2"><img src="Q2.jpg"></a>
+        <a href="question1/" alt="Question1"><img src="{% static 'questions/1.png' %}"></a>
+        <a href="question2/" alt="Question2"><img src="{% static 'questions/2.png' %}"></a>
     </body>
 </html>

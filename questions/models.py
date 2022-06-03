@@ -1,5 +1,5 @@
 import requests
-from django.forms import ModelForm
+from django.db import models
 # Create your models here.
 class ticket:
     def get_ticket_json():
@@ -7,7 +7,17 @@ class ticket:
         res = requests.get(url).json()
         return res
 
-# class SearchForm(ModelForm):
-#     d
-#     class Meta():
-#         d
+class Airport(models.Model):
+    icao = models.CharField(max_length=10, unique=True)
+    iata = models.CharField(max_length=5)
+    name = models.TextField()
+    city = models.CharField(max_length=40)
+    state = models.CharField(max_length=30)
+    country = models.CharField(max_length=30)
+    elevation = models.IntegerField()
+    lat = models.FloatField()
+    lon = models.FloatField()
+    tz = models.TextField()
+
+    class Meta:
+        db_table = 'airport'
