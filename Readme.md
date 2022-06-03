@@ -12,8 +12,8 @@ Archetecture
   + GET /question2/?search_tag={search_tag}&search_keyword={search_keyword}
   + search tag = [ 'iata' , 'name' , 'city' ]
 #### Runbook
-1. pip install -r requirements.txt
-2. cd this folder, current directory location
+1. cd this folder location
+2. pip install -r requirements.txt
 3. python manage.py migrate
 4. python manage.py runserver
 5. localhost:8000/setup
